@@ -45,11 +45,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rooki/pihole-api"
+    "url": "https://github.com/linx-systems/pihole-api"
   },
-  "homepage": "https://github.com/rooki/pihole-api#readme",
+  "homepage": "https://github.com/linx-systems/pihole-api#readme",
   "bugs": {
-    "url": "https://github.com/rooki/pihole-api/issues"
+    "url": "https://github.com/linx-systems/pihole-api/issues"
   },
   "devDependencies": {
     "@types/bun": "^1.1.6",
