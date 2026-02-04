@@ -108,25 +108,47 @@ export interface DatabaseInfo {
   took?: number;
 }
 
+/** Local version info */
+export interface LocalVersionInfo {
+  branch?: string | null;
+  version?: string | null;
+  hash?: string | null;
+}
+
+/** Local FTL version info (includes date) */
+export interface LocalFtlVersionInfo extends LocalVersionInfo {
+  date?: string | null;
+}
+
+/** Remote version info */
+export interface RemoteVersionInfo {
+  version?: string | null;
+  hash?: string | null;
+}
+
+/** Component version info */
+export interface ComponentVersionInfo {
+  local: LocalVersionInfo;
+  remote: RemoteVersionInfo;
+  /** Whether an update is available */
+  update?: boolean;
+}
+
+/** FTL version info (includes date field) */
+export interface FtlVersionInfo {
+  local: LocalFtlVersionInfo;
+  remote: RemoteVersionInfo;
+  /** Whether an update is available */
+  update?: boolean;
+}
+
 export interface VersionInfo {
-  core: {
-    local: { version: string; branch: string; hash: string };
-    remote: { version: string; branch: string; hash: string };
-    update: boolean;
-  };
-  ftl: {
-    local: { version: string; branch: string; hash: string };
-    remote: { version: string; branch: string; hash: string };
-    update: boolean;
-  };
-  web: {
-    local: { version: string; branch: string; hash: string };
-    remote: { version: string; branch: string; hash: string };
-    update: boolean;
-  };
+  core: ComponentVersionInfo;
+  ftl: FtlVersionInfo;
+  web: ComponentVersionInfo;
   docker: {
-    local: string | null;
-    remote: string | null;
+    local?: string | null;
+    remote?: string | null;
   };
   took?: number;
 }

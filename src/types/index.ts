@@ -15,6 +15,7 @@ export * from "./config.js";
 export * from "./info.js";
 export * from "./network.js";
 export * from "./dns.js";
+export * from "./padd.js";
 
 // Additional types for teleporter
 export interface TeleporterExport {
@@ -30,12 +31,16 @@ export interface TeleporterImportOptions {
 // Logs
 export interface LogsResponse {
   log: string[];
+  /** Next cursor ID for pagination */
+  nextID?: number;
   took?: number;
 }
 
 export interface LogsOptions {
   /** Number of lines to return */
   lines?: number;
+  /** Cursor for pagination (next ID from previous response) */
+  nextID?: number;
 }
 
 // Actions

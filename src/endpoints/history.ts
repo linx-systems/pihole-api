@@ -17,6 +17,8 @@ export interface HistoryOptions {
   from?: number;
   /** End timestamp (Unix) */
   until?: number;
+  /** Time interval in seconds for aggregating data */
+  interval?: number;
 }
 
 /**
@@ -84,6 +86,7 @@ export class HistoryEndpoints {
     const params = new URLSearchParams();
     if (options?.from) params.set("from", options.from.toString());
     if (options?.until) params.set("until", options.until.toString());
+    if (options?.interval) params.set("interval", options.interval.toString());
     return params;
   }
 }
@@ -150,6 +153,7 @@ export class DatabaseHistoryEndpoints {
     const params = new URLSearchParams();
     if (options?.from) params.set("from", options.from.toString());
     if (options?.until) params.set("until", options.until.toString());
+    if (options?.interval) params.set("interval", options.interval.toString());
     return params;
   }
 }

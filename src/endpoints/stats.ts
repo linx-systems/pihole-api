@@ -67,6 +67,7 @@ export class StatsEndpoints {
     const params = new URLSearchParams();
     if (options?.count) params.set("count", options.count.toString());
     if (options?.blocked) params.set("blocked", "true");
+    if (options?.show) params.set("show", options.show.toString());
 
     const query = params.toString();
     const path = query
@@ -92,6 +93,7 @@ export class StatsEndpoints {
     const params = new URLSearchParams();
     if (options?.count) params.set("count", options.count.toString());
     if (options?.blocked) params.set("blocked", "true");
+    if (options?.show) params.set("show", options.show.toString());
 
     const query = params.toString();
     const path = query

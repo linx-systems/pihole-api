@@ -113,11 +113,40 @@ export class AuthEndpoints {
 
   /**
    * Generate TOTP setup for 2FA.
+   * Returns the secret and QR code for setting up authenticator app.
    */
   async generateTotp(): Promise<Result<TotpSetup, PiholeError>> {
     return this.http.request<TotpSetup>(
       {
         method: "GET",
+        path: "/api/auth/totp",
+      },
+      this.getAuthHeaders(),
+    );
+  }
+
+  /**
+   * Enable TOTP 2FA.
+   * @param totp TOTP code from authenticator app to verify setup
+   */
+  async enableTotp(totp: string): Promise<Result<void, PiholeError>> {
+    return this.http.request<void>(
+      {
+        method: "POST",
+        path: "/api/auth/totp",
+        body: { totp },
+      },
+      this.getAuthHeaders(),
+    );
+  }
+
+  /**
+   * Disable TOTP 2FA.
+   */
+  async disableTotp(): Promise<Result<void, PiholeError>> {
+    return this.http.request<void>(
+      {
+        method: "DELETE",
         path: "/api/auth/totp",
       },
       this.getAuthHeaders(),

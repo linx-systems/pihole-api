@@ -38,6 +38,9 @@ export class QueriesEndpoints {
     if (params?.cursor) queryParams.set("cursor", params.cursor);
     if (params?.upstream) queryParams.set("upstream", params.upstream);
     if (params?.order) queryParams.set("order", params.order);
+    if (params?.blocked) queryParams.set("blocked", "true");
+    if (params?.permitted) queryParams.set("permitted", "true");
+    if (params?.answered) queryParams.set("answered", "true");
 
     const query = queryParams.toString();
     const path = query ? `/api/queries?${query}` : "/api/queries";

@@ -15,6 +15,7 @@ import { InfoEndpoints } from "./endpoints/info.js";
 import { ListsEndpoints } from "./endpoints/lists.js";
 import { LogsEndpoints } from "./endpoints/logs.js";
 import { NetworkEndpoints } from "./endpoints/network.js";
+import { PaddEndpoints } from "./endpoints/padd.js";
 import { QueriesEndpoints } from "./endpoints/queries.js";
 import { StatsEndpoints } from "./endpoints/stats.js";
 import { TeleporterEndpoints } from "./endpoints/teleporter.js";
@@ -121,6 +122,9 @@ export class PiholeClient {
   /** Teleporter endpoints */
   readonly teleporter: TeleporterEndpoints;
 
+  /** PADD endpoint for terminal display */
+  readonly padd: PaddEndpoints;
+
   constructor(config: PiholeClientConfig) {
     // Normalize base URL
     const baseUrl = config.baseUrl.replace(/\/+$/, "");
@@ -162,6 +166,7 @@ export class PiholeClient {
     this.actions = new ActionsEndpoints(this.http, getAuthHeaders);
     this.logs = new LogsEndpoints(this.http, getAuthHeaders);
     this.teleporter = new TeleporterEndpoints(this.http, getAuthHeaders);
+    this.padd = new PaddEndpoints(this.http, getAuthHeaders);
   }
 
   /**
