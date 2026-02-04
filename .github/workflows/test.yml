@@ -1,0 +1,47 @@
+name: Test
+
+on:
+  workflow_call:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install
+      - run: bun run typecheck
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install
+      - run: bun run lint
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install
+      - name: Run tests
+        run: |
+          if find . -path ./node_modules -prune -o -name "*.test.ts" -o -name "*.spec.ts" -print | grep -q .; then
+            bun test
+          else
+            echo "No test files found, skipping"
+          fi
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install
+      - run: bun run build

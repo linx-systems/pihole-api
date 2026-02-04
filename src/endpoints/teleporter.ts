@@ -2,7 +2,7 @@
  * Teleporter endpoints.
  */
 
-import type { PiholeError } from "../errors.js";
+import { PiholeErrorCode, type PiholeError } from "../errors.js";
 import type { HttpClient } from "../http.js";
 import type { Result } from "../result.js";
 import type {
@@ -40,7 +40,7 @@ export class TeleporterEndpoints {
         return {
           ok: false,
           error: {
-            code: "unknown" as any,
+            code: PiholeErrorCode.Unknown,
             message: `HTTP ${response.status}`,
             status: response.status,
           },
@@ -61,7 +61,7 @@ export class TeleporterEndpoints {
       return {
         ok: false,
         error: {
-          code: "network_error" as any,
+          code: PiholeErrorCode.NetworkError,
           message: error instanceof Error ? error.message : "Unknown error",
           status: 0,
         },
@@ -114,7 +114,7 @@ export class TeleporterEndpoints {
         return {
           ok: false,
           error: {
-            code: "unknown" as any,
+            code: PiholeErrorCode.Unknown,
             message: errorMessage,
             status: response.status,
           },
@@ -126,7 +126,7 @@ export class TeleporterEndpoints {
       return {
         ok: false,
         error: {
-          code: "network_error" as any,
+          code: PiholeErrorCode.NetworkError,
           message: error instanceof Error ? error.message : "Unknown error",
           status: 0,
         },
