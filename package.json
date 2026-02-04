@@ -1,5 +1,5 @@
 {
-  "name": "pihole-api-client",
+  "name": "@linx-systems/pihole-api-client",
   "version": "0.1.0",
   "description": "Type-safe TypeScript client for the Pi-hole v6 REST API",
   "type": "module",

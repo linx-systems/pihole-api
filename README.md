@@ -1,5 +1,8 @@
 # pihole-api-client
 
+[![npm](https://img.shields.io/npm/v/@linx-systems/pihole-api-client)](https://www.npmjs.com/package/@linx-systems/pihole-api-client)
+[![GitHub Package](https://img.shields.io/badge/GitHub-Package-blue)](https://github.com/linx-systems/pihole-api/pkgs/npm/pihole-api-client)
+
 Type-safe TypeScript client for the Pi-hole v6 REST API.
 
 ## Features
@@ -14,16 +17,24 @@ Type-safe TypeScript client for the Pi-hole v6 REST API.
 
 ## Installation
 
+### npm (recommended)
+
 ```bash
-npm install pihole-api-client
+npm install @linx-systems/pihole-api-client
 # or
-bun add pihole-api-client
+bun add @linx-systems/pihole-api-client
+```
+
+### GitHub Packages (alternative)
+
+```bash
+npm install @linx-systems/pihole-api-client --registry=https://npm.pkg.github.com
 ```
 
 ## Quick Start
 
 ```typescript
-import { PiholeClient, isOk, isErr } from "pihole-api-client";
+import { PiholeClient, isOk, isErr } from "@linx-systems/pihole-api-client";
 
 const client = new PiholeClient({
   baseUrl: "http://pi.hole",
@@ -274,7 +285,7 @@ await client.getEndpoints();
 ## Error Handling
 
 ```typescript
-import { PiholeErrorCode } from "pihole-api-client";
+import { PiholeErrorCode } from "@linx-systems/pihole-api-client";
 
 const result = await client.dns.disable();
 
