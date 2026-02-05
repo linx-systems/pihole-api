@@ -176,9 +176,19 @@ export class PiholeClient {
    * @param totp Optional TOTP code for 2FA
    */
   async connect(totp?: string): Promise<Result<void, PiholeError>> {
-    const success = await this.session.authenticate(totp);
+    let success = await this.session.authenticate(totp);
     if (success) {
       return { ok: true, data: undefined };
+    }
+
+    // If no password was configured, try passwordless (empty password)
+    if (!this.session.hasPassword()) {
+      this.session.setPassword("");
+      success = await this.session.authenticate();
+      if (success) {
+        return { ok: true, data: undefined };
+      }
+      this.session.clearPassword();
     }
 
     if (this.session.isTotpRequired()) {
@@ -215,6 +225,13 @@ export class PiholeClient {
    */
   isTotpRequired(): boolean {
     return this.session.isTotpRequired();
+  }
+
+  /**
+   * Check if connected to a passwordless Pi-hole instance.
+   */
+  isPasswordless(): boolean {
+    return this.session.isPasswordless();
   }
 
   /**

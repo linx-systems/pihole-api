@@ -9,14 +9,16 @@ import type { AuthResponse, Session } from "./types/auth.js";
 
 /** Session state */
 export interface SessionState {
-  /** Session ID */
-  sid: string;
+  /** Session ID (null when passwordless) */
+  sid: string | null;
   /** CSRF token */
   csrf: string;
   /** Expiry timestamp (Unix ms) */
   expiresAt: number;
   /** Whether TOTP is required */
   totpRequired: boolean;
+  /** Whether server has no password set */
+  passwordless: boolean;
 }
 
 /** Session manager configuration */
@@ -53,8 +55,8 @@ export class SessionManager {
     this.http = http;
     this.config = { ...DEFAULT_SESSION_CONFIG, ...config };
 
-    // Store password if provided
-    if (config.password) {
+    // Store password if provided (including empty string for passwordless)
+    if (config.password !== undefined) {
       this.password = config.password;
     }
 
@@ -65,6 +67,7 @@ export class SessionManager {
         csrf: config.csrf,
         expiresAt: Date.now() + 300000, // Assume 5 minutes
         totpRequired: false,
+        passwordless: false,
       };
     }
   }
@@ -83,6 +86,7 @@ export class SessionManager {
   /** Check if session needs refresh */
   needsRefresh(): boolean {
     if (!this.state || !this.config.autoRefresh) return false;
+    if (this.state.passwordless) return false;
     const threshold = this.config.refreshThreshold * 1000;
     return Date.now() >= this.state.expiresAt - threshold;
   }
@@ -94,7 +98,8 @@ export class SessionManager {
 
   /** Get auth headers for requests */
   getAuthHeaders(): Record<string, string> | undefined {
-    if (!this.state) return undefined;
+    if (!this.state || this.state.passwordless || !this.state.sid)
+      return undefined;
     return {
       "X-FTL-SID": this.state.sid,
       "X-FTL-CSRF": this.state.csrf,
@@ -137,7 +142,7 @@ export class SessionManager {
    * Authenticate with Pi-hole.
    */
   async authenticate(totp?: string): Promise<boolean> {
-    if (!this.password) {
+    if (this.password === undefined || this.password === null) {
       return false;
     }
 
@@ -163,6 +168,7 @@ export class SessionManager {
           csrf: "",
           expiresAt: 0,
           totpRequired: true,
+          passwordless: false,
         };
       }
       return false;
@@ -178,6 +184,12 @@ export class SessionManager {
    */
   async logout(): Promise<boolean> {
     if (!this.state) {
+      return true;
+    }
+
+    // No server-side session to invalidate when passwordless
+    if (this.state.passwordless) {
+      this.clear();
       return true;
     }
 
@@ -209,15 +221,32 @@ export class SessionManager {
     return this.authenticate();
   }
 
+  /** Whether a password was configured */
+  hasPassword(): boolean {
+    return this.password !== null;
+  }
+
+  /** Whether the server has no password set */
+  isPasswordless(): boolean {
+    return this.state?.passwordless ?? false;
+  }
+
+  /** Clear stored password */
+  clearPassword(): void {
+    this.password = null;
+  }
+
   /**
    * Update session state from auth response.
    */
   private updateSession(session: Session): void {
+    const isPasswordless = session.sid === null || session.validity === -1;
     this.state = {
       sid: session.sid,
-      csrf: session.csrf,
-      expiresAt: Date.now() + session.validity * 1000,
+      csrf: session.csrf ?? "",
+      expiresAt: isPasswordless ? Infinity : Date.now() + session.validity * 1000,
       totpRequired: false,
+      passwordless: isPasswordless,
     };
   }
 }

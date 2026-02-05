@@ -5,14 +5,16 @@
 export interface Session {
   /** Session valid */
   valid: boolean;
-  /** Session ID */
-  sid: string;
+  /** Session ID (null when no password is set) */
+  sid: string | null;
   /** CSRF token */
-  csrf: string;
-  /** Session validity in seconds */
+  csrf?: string;
+  /** Session validity in seconds (-1 when no password is set) */
   validity: number;
   /** Whether TOTP is enabled */
   totp: boolean;
+  /** Server message (e.g. "no password set") */
+  message?: string;
 }
 
 export interface AuthResponse {
